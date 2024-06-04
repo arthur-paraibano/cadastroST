@@ -30,14 +30,48 @@ public class PessoaDao implements GenericDao<Pessoa> {
 
     @Override
     public void update(Pessoa enty) throws SQLException, Exception {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'update'");
+        String sql = "UPDATE cadastro.cfg_pessoa SET CFG_NOME = ?, CFG_TELEFONE = ?, CFG_EMAIL = ? WHERE ID =?";
+        this.con = BaseDados.getConnection();
+        this.stmt = con.prepareStatement(sql);
+        this.stmt.setString(1, enty.getNome());
+        this.stmt.setString(2, enty.getTelefone());
+        this.stmt.setString(3, enty.getEmail());
+        this.stmt.setInt(4, enty.getId());
+        this.stmt.executeUpdate();
+        BaseDados.closeConnection(con, stmt, rs);
+    }
+
+    public Pessoa findById(Integer id) throws SQLException, Exception {
+        Pessoa object = null;
+        String sql = "SELECT ID, CFG_NOME, CFG_TELEFONE, CFG_EMAIL FROM cadastro.cfg_pessoa where id = ? ";
+        this.con = BaseDados.getConnection();
+        this.stmt = this.con.prepareStatement(sql);
+        this.stmt.setInt(1, id);
+        this.rs = this.stmt.executeQuery();
+
+        if (this.rs.next()) {
+            object = new Pessoa(
+                    this.rs.getInt("ID"),
+                    this.rs.getString("CFG_NOME"),
+                    this.rs.getString("CFG_TELEFONE"),
+                    this.rs.getString("CFG_EMAIL"));
+        }
+        return object;
     }
 
     @Override
     public void remove(Pessoa enty) throws SQLException, Exception {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'remove'");
+        throw new UnsupportedOperationException("Unimplemented method 'findById'");
+    }
+
+    public void delete(int enty) throws SQLException, Exception {
+        String sql = "DELETE FROM cadastro.cfg_pessoa WHERE ?";
+        this.con = BaseDados.getConnection();
+        this.stmt = con.prepareStatement(sql);
+        this.stmt.setInt(1, enty);
+        this.stmt.executeUpdate();
+        BaseDados.closeConnection(con, stmt);
     }
 
     @Override

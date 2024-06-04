@@ -31,4 +31,32 @@ public class PessoaController {
             return new ArrayList<>();
         }
     }
+
+    public Pessoa findById(int idPessoa) {
+        try {
+            return dao.findById(idPessoa);
+        } catch (Exception e) {
+            Message.errorX(null, "Erro ao obter Usuário!!! 'findById' " + e.getMessage());
+            return null;
+        }
+    }
+
+    public boolean updateUser(Pessoa user) {
+        try {
+            dao.update(user);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public boolean delete(int enty) {
+        try {
+            dao.delete(enty);
+            return true;
+        } catch (Exception e) {
+            e.getMessage();
+            return false;
+        }
+    }
 }
