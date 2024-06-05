@@ -66,11 +66,11 @@ public class PessoaDao implements GenericDao<Pessoa> {
     }
 
     public void delete(int enty) throws SQLException, Exception {
-        String sql = "DELETE FROM cadastro.cfg_pessoa WHERE ?";
+        String sql = "DELETE FROM cfg_pessoa WHERE id = ?";
         this.con = BaseDados.getConnection();
         this.stmt = con.prepareStatement(sql);
         this.stmt.setInt(1, enty);
-        this.stmt.executeUpdate();
+        this.stmt.execute();
         BaseDados.closeConnection(con, stmt);
     }
 

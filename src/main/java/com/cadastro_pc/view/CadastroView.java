@@ -4,6 +4,7 @@ import java.awt.Toolkit;
 import java.text.ParseException;
 import java.util.List;
 
+import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.text.MaskFormatter;
 
@@ -64,7 +65,7 @@ public class CadastroView extends javax.swing.JFrame {
                 EnterToTab.add(jFormat_Telefone);
                 AutoCompleteDecorator.decorate(jCBox_Puscar);
                 populCobobox();
-                lodTable();
+                loadTable();
         }
 
         private void initMetods() {
@@ -86,7 +87,7 @@ public class CadastroView extends javax.swing.JFrame {
 
                                 this.pessoaController.addPessoa(entyPessoa);
                                 populCobobox();
-                                lodTable();
+                                loadTable();
                         } else {
                                 Message.erroTrist(null, "E-mail / Gmail inválido!!!");
                         }
@@ -98,7 +99,7 @@ public class CadastroView extends javax.swing.JFrame {
         private void buscar() {
                 if (jCBox_Puscar.getSelectedIndex() >= 0) {
                         String nome = jCBox_Puscar.getSelectedItem().toString();
-                        lodTable();
+                        loadTable();
                         int rowCount = jTab_Informacoes.getRowCount();
                         int startRow = lastSelectedRowIndex + 1;
                         if (lastSelectedRowIndex < 0 || lastSelectedRowIndex >= rowCount) {
@@ -139,12 +140,18 @@ public class CadastroView extends javax.swing.JFrame {
         private void delete() {
                 int idUser = Integer.parseInt(
                                 String.valueOf(jTab_Informacoes.getValueAt(jTab_Informacoes.getSelectedRow(), 0)));
-                boolean result = this.pessoaController.delete(idUser);
-                if (result) {
-                        Message.sucess(null, "Pessoa deletada com sucesso!");
-                        lodTable();
-                } else {
-                        Message.sqlErro(null, "Erro ao deletar pessoa!");
+
+                int option = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja excluir este usuário?",
+                                "Confirmação", JOptionPane.YES_NO_OPTION);
+
+                if (option == JOptionPane.YES_OPTION) {
+                        boolean result = this.pessoaController.delete(idUser);
+                        if (result) {
+                                Message.sucess(null, "Pessoa deletada com sucesso!");
+                                loadTable();
+                        } else {
+                                Message.sqlErro(null, "Erro ao deletar pessoa!");
+                        }
                 }
         }
 
@@ -158,7 +165,7 @@ public class CadastroView extends javax.swing.JFrame {
                 view.setVisible(true);
         }
 
-        private void lodTable() {
+        private void loadTable() {
                 PessoaTableModal modal = new PessoaTableModal(this.pessoaController.listAll());
                 configTable(modal);
         }
